@@ -18,4 +18,11 @@ Change the parameters there as you see fit.
 Now, copy post-commit.sh to .git/hooks/post-commit of your git repository. Change the DBus interface
 string there to reflect the one set in configFile.ini.
 
+You can also write custom scripts. For example, you can type the following to the Qt_bot:
+
+Qt_bot, !time
+
+You have to write a time.js script and put it in the same directory as the executable. The time.js
+scripe gets called.
+
 Contact debayan@forwardbias.in for further queries.
