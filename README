@@ -1,0 +1,21 @@
+gBot
+----
+
+21st January, 2010
+
+You must have Qt4 devel packages installed. You should also have DBus and qdbus installed.
+
+To build the project follow these steps:
+
+1) Type qmake-qt4 -project
+2) Type qmake-qt4
+3) Type make
+4) ./bot -c configFile.ini
+
+You have your bot up and running. It listens at the DBus interface specified in configFile.ini.
+Change the parameters there as you see fit.
+
+Now, copy post-commit.sh to .git/hooks/post-commit of your git repository. Change the DBus interface
+string there to reflect the one set in configFile.ini.
+
+Contact debayan@forwardbias.in for further queries.
