@@ -132,7 +132,7 @@ void Bot::onReadReady()
 			}else		
 			
 			{
-				sendMessage("PRIVMSG "+channel+" :I do not just print commit messages!\n");
+				sendMessage("PRIVMSG "+channel+" :I print commit messages. I also have other functions. Type !help with my name.\n");
 			}
 		}
 		if ( reply.indexOf("PING") == 0 )
