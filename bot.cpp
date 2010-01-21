@@ -10,14 +10,14 @@ QString Bot::commit(const QString &arg)
 	commitMessage = "PRIVMSG "+channel+" :" + commitMessage + "\n";
 	sendMessage(commitMessage);
 	commitMessage.clear();
-    return QString("commit(\"%1\") got called").arg(arg);
+	return QString("commit(\"%1\") got called").arg(arg);
 }
 
 void Bot::onConnect()
 {
 	connect(&tcpSocket, SIGNAL(readyRead()), this, SLOT(onReadReady()));
-    dataToSend = "NICK " + nick + "\r\n" + "USER " + iDent + ' ' + serverAddress +" bla :"+ realName  +"\r\n";
-    sendMessage(dataToSend);
+	dataToSend = "NICK " + nick + "\r\n" + "USER " + iDent + ' ' + serverAddress +" bla :"+ realName  +"\r\n";
+	sendMessage(dataToSend);
 }
 
 void Bot::onError( QAbstractSocket::SocketError socketError )
@@ -44,7 +44,7 @@ Bot::Bot( const QString &configurationFileName )
 	channel = settings.value("channel").toString();
 	DBusInterface = settings.value("DBusInterface").toString();
 	tcpSocket.abort();
-    tcpSocket.connectToHost( serverAddress, port);
+	tcpSocket.connectToHost( serverAddress, port);
 	connect(&tcpSocket ,SIGNAL(connected()), this, SLOT(onConnect()));
 	connect(&tcpSocket ,SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
 
@@ -54,8 +54,7 @@ Bot::Bot( const QString &configurationFileName )
 void Bot::sendMessage(const QString &messageBlock)
 {
 	qDebug() << messageBlock; 
-    
-    qint64 i = tcpSocket.write(messageBlock.toAscii());            	
+	qint64 i = tcpSocket.write(messageBlock.toAscii());            	
 	tcpSocket.flush();
 }
 
@@ -64,10 +63,10 @@ void Bot::sendHelp()
 	QDir dir;
 	QString extension;
 	QString commandsAvaliable;
-    dir.setFilter(QDir::Files);
-    QFileInfoList list = dir.entryInfoList();
-    for (int i = 0; i < list.size(); ++i) {
-        QFileInfo fileInfo = list.at(i);
+	dir.setFilter(QDir::Files);
+	QFileInfoList list = dir.entryInfoList();
+	for (int i = 0; i < list.size(); ++i) {
+		QFileInfo fileInfo = list.at(i);
 		extension = fileInfo.suffix();
 		if ( extension == "js" )
 		{ commandsAvaliable.append("!"+fileInfo.fileName().split(".")[0]+"  ");}
@@ -78,8 +77,8 @@ void Bot::sendHelp()
 static QScriptValue Foo(QScriptContext *context, QScriptEngine *engine)
 {
 	QScriptValue a = context->argument(0);
-    QScriptValue b = context->argument(1);
-    return "haha";
+	QScriptValue b = context->argument(1);
+	return "haha";
 }
 
 void Bot::executeScript(const QString &scriptName)
@@ -91,10 +90,10 @@ void Bot::executeScript(const QString &scriptName)
 	engine->globalObject().setProperty("Foo", engine->newFunction(Foo));
 	
 	fullScriptName.replace(QChar('\n'),".js");
-    QFile script( fullScriptName );
-    script.open(QFile::ReadOnly);
-    QString code = script.readAll();
-    QScriptValue value = engine->evaluate(code);
+	QFile script( fullScriptName );
+	script.open(QFile::ReadOnly);
+	QString code = script.readAll();
+	QScriptValue value = engine->evaluate(code);
 	sendMessage("PRIVMSG "+channel+" :"+ value.toString() + "\n");
 }
 

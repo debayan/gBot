@@ -28,20 +28,20 @@ int main(int argc, char *argv[])
 	Bot bot( configurationFileName );
 	
 	if (!QDBusConnection::sessionBus().isConnected()) {                        
-        fprintf(stderr, "Cannot connect to the D-Bus session bus.\n"           
-                "To start it, run:\n"                                          
-                "\teval `dbus-launch --auto-syntax`\n");                       
+		fprintf(stderr, "Cannot connect to the D-Bus session bus.\n"           
+				"To start it, run:\n"                                          
+				"\teval `dbus-launch --auto-syntax`\n");                       
     }
 
-    if (!QDBusConnection::sessionBus().registerService(bot.serviceName())) {
-        fprintf(stderr, "%s\n",
-                qPrintable(QDBusConnection::sessionBus().lastError().message()));               
-        exit(1);
+	if (!QDBusConnection::sessionBus().registerService(bot.serviceName())) {
+		fprintf(stderr, "%s\n",
+			qPrintable(QDBusConnection::sessionBus().lastError().message()));               
+		exit(1);
     }
 	
 
-    QDBusConnection::sessionBus().registerObject("/", &bot, QDBusConnection::ExportAllSlots);
+	QDBusConnection::sessionBus().registerObject("/", &bot, QDBusConnection::ExportAllSlots);
     
-    qDebug() <<"Listening on DBUS...";
+	qDebug() <<"Listening on DBUS...";
 	return app.exec();
 }
