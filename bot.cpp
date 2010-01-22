@@ -159,13 +159,27 @@ void ScriptFunctions::sendPrivateMessage(const QString &message)
 	bot->sendMessage("PRIVMSG "+bot->channel+" :"+ message + "\n");
 }
 
-QString ScriptFunctions::execute(const QString &program)
+void ScriptFunctions::execute(const QString &program)
 {
-	QProcess process;
-	process.start(program);
-	process.waitForFinished();
-	QByteArray output = process.readAll();
-	return output;
+	QScriptValue callbackFunction = context()->argument(1);
+
+	QProcess *process = new QProcess(this);
+	process->setProperty("engine", qVariantFromValue(engine()));
+	process->setProperty("callbackFunction", qVariantFromValue(callbackFunction));
+	connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(handleFinished(int, QProcess::ExitStatus)));
+	process->start(program);
 }
 
+void ScriptFunctions::handleFinished(int exitCode, QProcess::ExitStatus status)
+{
+	QProcess *process = qobject_cast<QProcess *>(sender());
+	Q_ASSERT(process);
+	QString output = process->readAll().trimmed();
+	QScriptValue callback = qvariant_cast<QScriptValue>(process->property("callbackFunction"));
+	QScriptEngine *engine = qvariant_cast<QScriptEngine *>(process->property("engine"));
+	QScriptValueList list;
+	list << output;
+	callback.call(QScriptValue(), list);
+	delete process;
+}
 

@@ -56,10 +56,15 @@ public:
 
 public slots:
 	void sendPrivateMessage(const QString &message);
-	QString execute(const QString &program);
+	void execute(const QString &program);
+
+private slots:
+	void handleFinished(int, QProcess::ExitStatus);
 
 private:
 	Bot *bot;
 };
 
+Q_DECLARE_METATYPE(QScriptValue);
+Q_DECLARE_METATYPE(QScriptEngine *);
 #endif 
