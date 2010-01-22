@@ -88,7 +88,7 @@ void Bot::executeScript(const QString &scriptName)
 	if (engines.contains(scriptName)) {
 		engine = engines[scriptName];
 	} else {
-		engine = new QScriptEngine;
+		engine = new QScriptEngine(this);
 		QScriptValue fooProto = engine->newObject();
 		engine->globalObject().setProperty("Foo", engine->newFunction(Foo));
 		engine->globalObject().setProperty("bot", engine->newQObject(scriptFunctions));
