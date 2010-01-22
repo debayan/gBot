@@ -61,7 +61,7 @@ void Bot::sendMessage(const QString &messageBlock)
 
 void Bot::sendHelp()
 {
-	QDir dir;
+	QDir dir("scripts/");
 	QString extension;
 	QString commandsAvaliable;
 	dir.setFilter(QDir::Files);
