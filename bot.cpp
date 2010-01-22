@@ -105,6 +105,15 @@ void Bot::executeScript(const QString &scriptName)
 //	sendMessage(channel, value.toString());
 }
 
+QString Bot::execute(const QString &program)
+{
+	QProcess process;
+	process.start(program);
+	process.waitForFinished();
+	QByteArray output = process.readAll();
+	return output;
+}
+
 void Bot::onReadReady()
 {
 	QByteArray reply;

@@ -7,7 +7,7 @@
 #include <QtScript>
 #include <QSettings>
 
-class Bot : public QObject
+class Bot : public QObject, protected QScriptable
 {
 	Q_OBJECT
 
@@ -19,6 +19,7 @@ public:
 public slots:
 	void sendMessage(const QString &);
 	void sendPrivateMessage(const QString &message);
+	QString execute(const QString &program);
 
 private:
 	QString serverAddress;
