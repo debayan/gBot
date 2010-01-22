@@ -92,13 +92,15 @@ void Bot::executeScript(const QString &scriptName)
 		QScriptValue fooProto = engine->newObject();
 		engine->globalObject().setProperty("Foo", engine->newFunction(Foo));
 		engine->globalObject().setProperty("bot", engine->newQObject(scriptFunctions));
+
+		QFile script(scriptName);
+		script.open(QFile::ReadOnly);
+		QString code = script.readAll();
+		QScriptValue value = engine->evaluate(code);
 		engines[scriptName] = engine;
 	}
-	QFile script(scriptName);
-	script.open(QFile::ReadOnly);
-	QString code = script.readAll();
-	QScriptValue value = engine->evaluate(code);
-//	sendMessage(channel, value.toString());
+
+	engine->evaluate("execute()");
 }
 
 void Bot::onReadReady()
