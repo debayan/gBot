@@ -48,6 +48,7 @@ Bot::Bot( const QString &configurationFileName )
 	connect(&tcpSocket ,SIGNAL(connected()), this, SLOT(onConnect()));
 	connect(&tcpSocket ,SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(onError(QAbstractSocket::SocketError)));
 
+	scriptFunctions = new ScriptFunctions(this);
 }
 
 
@@ -56,11 +57,6 @@ void Bot::sendMessage(const QString &messageBlock)
 	qDebug() << messageBlock; 
 	qint64 i = tcpSocket.write(messageBlock.toAscii());            	
 	tcpSocket.flush();
-}
-
-void Bot::sendPrivateMessage(const QString &message)
-{
-	sendMessage("PRIVMSG "+channel+" :"+ message + "\n");
 }
 
 void Bot::sendHelp()
@@ -95,7 +91,7 @@ void Bot::executeScript(const QString &scriptName)
 		engine = new QScriptEngine;
 		QScriptValue fooProto = engine->newObject();
 		engine->globalObject().setProperty("Foo", engine->newFunction(Foo));
-		engine->globalObject().setProperty("bot", engine->newQObject(this));
+		engine->globalObject().setProperty("bot", engine->newQObject(scriptFunctions));
 		engines[scriptName] = engine;
 	}
 	QFile script(scriptName);
@@ -103,15 +99,6 @@ void Bot::executeScript(const QString &scriptName)
 	QString code = script.readAll();
 	QScriptValue value = engine->evaluate(code);
 //	sendMessage(channel, value.toString());
-}
-
-QString Bot::execute(const QString &program)
-{
-	QProcess process;
-	process.start(program);
-	process.waitForFinished();
-	QByteArray output = process.readAll();
-	return output;
 }
 
 void Bot::onReadReady()
@@ -159,3 +146,24 @@ void Bot::onReadReady()
 		}
 	}
 }
+
+ScriptFunctions::ScriptFunctions(Bot *bot)
+	: QObject(bot), bot(bot)
+{
+}
+
+void ScriptFunctions::sendPrivateMessage(const QString &message)
+{
+	bot->sendMessage("PRIVMSG "+bot->channel+" :"+ message + "\n");
+}
+
+QString ScriptFunctions::execute(const QString &program)
+{
+	QProcess process;
+	process.start(program);
+	process.waitForFinished();
+	QByteArray output = process.readAll();
+	return output;
+}
+
+

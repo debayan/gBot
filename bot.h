@@ -7,6 +7,8 @@
 #include <QtScript>
 #include <QSettings>
 
+class ScriptFunctions;
+
 class Bot : public QObject, protected QScriptable
 {
 	Q_OBJECT
@@ -18,8 +20,6 @@ public:
 
 public slots:
 	void sendMessage(const QString &);
-	void sendPrivateMessage(const QString &message);
-	QString execute(const QString &program);
 
 private:
 	QString serverAddress;
@@ -36,6 +36,8 @@ private:
 	QTcpSocket tcpSocket;
 	quint16 blockSize;
 	QHash<QString, QScriptEngine *> engines;
+	ScriptFunctions *scriptFunctions;
+	friend class ScriptFunctions;
 
 private slots:
 	void onReadReady();
@@ -44,6 +46,20 @@ private slots:
 	void sendHelp();
 public slots:
 	Q_SCRIPTABLE QString commit(const QString &arg);
+};
+
+class ScriptFunctions : public QObject, protected QScriptable
+{
+	Q_OBJECT
+public:
+	ScriptFunctions(Bot *bot);
+
+public slots:
+	void sendPrivateMessage(const QString &message);
+	QString execute(const QString &program);
+
+private:
+	Bot *bot;
 };
 
 #endif 
