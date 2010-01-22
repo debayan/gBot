@@ -58,6 +58,11 @@ void Bot::sendMessage(const QString &messageBlock)
 	tcpSocket.flush();
 }
 
+void Bot::sendMessage(const QString &channel, const QString &message)
+{
+	sendMessage("PRIVMSG "+channel+" :"+ message + "\n");
+}
+
 void Bot::sendHelp()
 {
 	QDir dir;
@@ -96,7 +101,7 @@ void Bot::executeScript(const QString &scriptName)
 	script.open(QFile::ReadOnly);
 	QString code = script.readAll();
 	QScriptValue value = engine->evaluate(code);
-	sendMessage("PRIVMSG "+channel+" :"+ value.toString() + "\n");
+	sendMessage(channel, value.toString());
 }
 
 void Bot::onReadReady()

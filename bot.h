@@ -13,9 +13,12 @@ class Bot : public QObject
 
 public:
 	Bot(const QString &);
-	void sendMessage(const QString &);
 	void executeScript(const QString &);
 	QString serviceName();
+
+public slots:
+	void sendMessage(const QString &);
+	void sendMessage(const QString &channel, const QString &message);
 
 private:
 	QString serverAddress;
