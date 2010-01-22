@@ -167,7 +167,8 @@ void ScriptFunctions::execute(const QString &program)
 	process->setProperty("engine", qVariantFromValue(engine()));
 	process->setProperty("callbackFunction", qVariantFromValue(callbackFunction));
 	connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(handleFinished(int, QProcess::ExitStatus)));
-	process->start(program);
+	process->start("bash", QStringList() << "-c" << program);
+	QTimer::singleShot(10000, process, SLOT(kill()));
 }
 
 void ScriptFunctions::handleFinished(int exitCode, QProcess::ExitStatus status)
