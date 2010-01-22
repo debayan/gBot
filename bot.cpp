@@ -83,14 +83,16 @@ static QScriptValue Foo(QScriptContext *context, QScriptEngine *engine)
 
 void Bot::executeScript(const QString &scriptName)
 {
-	QScriptEngine *engine = new QScriptEngine;
-	QString fullScriptName = scriptName;
-	
-	QScriptValue fooProto = engine->newObject();
-	engine->globalObject().setProperty("Foo", engine->newFunction(Foo));
-	
-	fullScriptName.replace(QChar('\n'),".js");
-	QFile script( fullScriptName );
+	QScriptEngine *engine = 0;
+	if (engines.contains(scriptName)) {
+		engine = engines[scriptName];
+	} else {
+		engine = new QScriptEngine;
+		QScriptValue fooProto = engine->newObject();
+		engine->globalObject().setProperty("Foo", engine->newFunction(Foo));
+		engines[scriptName] = engine;
+	}
+	QFile script(scriptName);
 	script.open(QFile::ReadOnly);
 	QString code = script.readAll();
 	QScriptValue value = engine->evaluate(code);

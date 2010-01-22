@@ -31,6 +31,7 @@ private:
 	QByteArray block;
 	QTcpSocket tcpSocket;
 	quint16 blockSize;
+	QHash<QString, QScriptEngine *> engines;
 
 private slots:
 	void onReadReady();
