@@ -99,8 +99,13 @@ void Bot::executeScript(const QString &scriptName)
 		QScriptValue value = engine->evaluate(code);
 		engines[scriptName] = engine;
 	}
+	
+	engine->evaluate("execute( argument )");
+	QScriptValue execute = engine->globalObject().property("execute");
+	QScriptValueList args;
+ 	args << arguments;
+ 	execute.call(QScriptValue(), args);
 
-	engine->evaluate("execute()");
 }
 
 void Bot::onReadReady()
@@ -135,9 +140,15 @@ void Bot::onReadReady()
 					QString scriptName = executeString.split(' ')[0];
 					int numberOfArguments = executeString.split(' ').size();
 					arguments.clear();
-					for (int i = 1; i < numberOfArguments; i++)
+					if ( numberOfArguments > 1 )
 					{
-						arguments.append(executeString.split(' ')[i]);
+						for (int i = 1; i < executeString.split(' ').size(); i++)
+						{
+							arguments.append(executeString.split(' ')[i]);
+							arguments.append(' ');
+						}
+						arguments = " " + arguments;
+					
 					}
 					int length = scriptName.size();
 					scriptName.append(".js");
@@ -171,20 +182,13 @@ void ScriptFunctions::sendPrivateMessage(const QString &message)
 void ScriptFunctions::execute(const QString &program)
 {
 	QScriptValue callbackFunction = context()->argument(1);
+	qDebug() <<"%%%"<<program;
 
 	QProcess *process = new QProcess(this);
 	process->setProperty("engine", qVariantFromValue(engine()));
 	process->setProperty("callbackFunction", qVariantFromValue(callbackFunction));
 	connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(handleFinished(int, QProcess::ExitStatus)));
-	//process->start( "bash", QStringList() << "-c" << program << bot->arguments );
-	if ( bot->arguments.size() > 0 )
-	{
-	process->start( program, bot->arguments );
-	}
-	else
-	{
-	process->start( program );
-	}
+	process->start( "bash", QStringList() << "-c" << program );
 	QTimer::singleShot(10000, process, SLOT(kill()));
 }
 

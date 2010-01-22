@@ -4,7 +4,7 @@ function figletCallback(output) {
         bot.sendPrivateMessage(out[i]);
 }
 
-function execute() {
-	bot.execute("figlet", figletCallback);
+function execute( argument )  {
+	
+	bot.execute("figlet "+argument, figletCallback);
 }
-
