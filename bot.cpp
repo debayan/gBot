@@ -93,7 +93,7 @@ void Bot::executeScript(const QString &scriptName)
 		engine->globalObject().setProperty("Foo", engine->newFunction(Foo));
 		engine->globalObject().setProperty("bot", engine->newQObject(scriptFunctions));
 
-		QFile script(scriptName);
+		QFile script("scripts/" + scriptName);
 		script.open(QFile::ReadOnly);
 		QString code = script.readAll();
 		QScriptValue value = engine->evaluate(code);
