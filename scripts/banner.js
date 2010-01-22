@@ -5,6 +5,6 @@ function figletCallback(output) {
 }
 
 function execute() {
-	bot.execute("figlet ForwardBias", figletCallback);
+	bot.execute("figlet", figletCallback);
 }
 

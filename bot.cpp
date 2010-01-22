@@ -130,9 +130,18 @@ void Bot::onReadReady()
 				}
 				else
 				{
-                	scriptName = reply.split('!')[2].split('\0')[0];
+                	QString executeString = reply.split('!')[2].split('\0')[0];
+					executeString = executeString.trimmed();
+					QString scriptName = executeString.split(' ')[0];
+					int numberOfArguments = executeString.split(' ').size();
+					arguments.clear();
+					for (int i = 1; i < numberOfArguments; i++)
+					{
+						arguments.append(executeString.split(' ')[i]);
+					}
 					int length = scriptName.size();
-					scriptName.replace(length-2,3,".js");
+					scriptName.append(".js");
+					qDebug() <<scriptName;
                 	executeScript(scriptName);
 				}
 			}else		
@@ -167,7 +176,15 @@ void ScriptFunctions::execute(const QString &program)
 	process->setProperty("engine", qVariantFromValue(engine()));
 	process->setProperty("callbackFunction", qVariantFromValue(callbackFunction));
 	connect(process, SIGNAL(finished(int, QProcess::ExitStatus)), this, SLOT(handleFinished(int, QProcess::ExitStatus)));
-	process->start("bash", QStringList() << "-c" << program);
+	//process->start( "bash", QStringList() << "-c" << program << bot->arguments );
+	if ( bot->arguments.size() > 0 )
+	{
+	process->start( program, bot->arguments );
+	}
+	else
+	{
+	process->start( program );
+	}
 	QTimer::singleShot(10000, process, SLOT(kill()));
 }
 
