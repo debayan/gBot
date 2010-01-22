@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
 	QApplication app(argc, argv);
-	QString configurationFileName;
+	QString configurationFileName = "botSettings.ini";
 	if ( argc == 3 )
 	{
 
@@ -19,11 +19,6 @@ int main(int argc, char *argv[])
 			qDebug() <<"Usage is:  ./bot -c configFile.ini ";
 			exit(1);
 		}
-	}
-	else
-	{
-		qDebug() <<"Usage is:  ./bot -c configFile.ini ";
-		exit(1);
 	}
 	Bot bot( configurationFileName );
 	
