@@ -4,7 +4,7 @@ function processCallback(output) {
         bot.sendPrivateMessage(out[i]);
 }
 
-function execute() {
-    bot.execute("fortune", processCallback);
+function execute( argument ) {
+    bot.execute("fortune "+argument, processCallback);
 }
 

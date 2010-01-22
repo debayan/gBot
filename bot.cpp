@@ -82,7 +82,7 @@ static QScriptValue Foo(QScriptContext *context, QScriptEngine *engine)
 	return "haha";
 }
 
-void Bot::executeScript(const QString &scriptName)
+void Bot::executeScript(const QString &scriptName, const QString &arguments)
 {
 	QScriptEngine *engine = 0;
 	if (engines.contains(scriptName)) {
@@ -100,7 +100,6 @@ void Bot::executeScript(const QString &scriptName)
 		engines[scriptName] = engine;
 	}
 	
-	engine->evaluate("execute( argument )");
 	QScriptValue execute = engine->globalObject().property("execute");
 	QScriptValueList args;
  	args << arguments;
@@ -139,7 +138,7 @@ void Bot::onReadReady()
 					executeString = executeString.trimmed();
 					QString scriptName = executeString.split(' ')[0];
 					int numberOfArguments = executeString.split(' ').size();
-					arguments.clear();
+					QString arguments;
 					if ( numberOfArguments > 1 )
 					{
 						for (int i = 1; i < executeString.split(' ').size(); i++)
@@ -153,7 +152,7 @@ void Bot::onReadReady()
 					int length = scriptName.size();
 					scriptName.append(".js");
 					qDebug() <<scriptName;
-                	executeScript(scriptName);
+                	executeScript(scriptName, arguments);
 				}
 			}else		
 			

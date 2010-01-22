@@ -32,7 +32,6 @@ private:
 	QString readBuffer;
 	QString dataToSend;
 	QString DBusInterface;
-	QString arguments;
 	QByteArray block;
 	QTcpSocket tcpSocket;
 	quint16 blockSize;
