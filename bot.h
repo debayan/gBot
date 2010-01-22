@@ -18,7 +18,7 @@ public:
 
 public slots:
 	void sendMessage(const QString &);
-	void sendMessage(const QString &channel, const QString &message);
+	void sendPrivateMessage(const QString &message);
 
 private:
 	QString serverAddress;
