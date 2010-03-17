@@ -23,7 +23,7 @@ void Bot::onConnect()
 void Bot::onError( QAbstractSocket::SocketError socketError )
 {
 
-	qDebug() <<"There was a socket error";
+	qDebug() <<"There was a socket error: " << socketError;
 
 }
 
@@ -55,7 +55,7 @@ Bot::Bot( const QString &configurationFileName )
 void Bot::sendMessage(const QString &messageBlock)
 {
 	qDebug() << messageBlock; 
-	qint64 i = tcpSocket.write(messageBlock.toAscii());            	
+	tcpSocket.write(messageBlock.toAscii());            	
 	tcpSocket.flush();
 }
 
@@ -116,7 +116,7 @@ void Bot::onReadReady()
 	{
 		reply = tcpSocket.readLine();
 		qDebug() << reply;
-		if ( reply.indexOf("identd") >= 0)
+		if ( reply.indexOf("Ident") >= 0)
 		{
 			sendMessage("JOIN "+channel+"\n");
 		}
@@ -149,7 +149,6 @@ void Bot::onReadReady()
 						arguments = " " + arguments;
 					
 					}
-					int length = scriptName.size();
 					scriptName.append(".js");
 					qDebug() <<scriptName;
                 	executeScript(scriptName, arguments);
@@ -203,4 +202,3 @@ void ScriptFunctions::handleFinished(int exitCode, QProcess::ExitStatus status)
 	callback.call(QScriptValue(), list);
 	delete process;
 }
-

@@ -15,7 +15,7 @@ class Bot : public QObject, protected QScriptable
 
 public:
 	Bot(const QString &);
-	void executeScript(const QString &);
+	void executeScript(const QString &, const QString &);
 	QString serviceName();
 
 public slots:

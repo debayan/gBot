@@ -5,6 +5,7 @@
 #
 # To enable this hook, rename this file to "post-commit".
 
-str1=`git log -n 1`
+str1=`cd ../../;pwd``git log -n 1`
+echo $str1
 
-qdbus com.forwardbias.git.commit / local.Bot.commit "$str1"
+#qdbus com.forwardbias.git.commit / local.Bot.commit "$str1"

@@ -1,11 +1,11 @@
 #include "bot.h"
-#include <QApplication>
+#include <QCoreApplication>
 #include <string.h>
 
 
 int main(int argc, char *argv[])
 {
-	QApplication app(argc, argv);
+	QCoreApplication app(argc, argv);
 	QString configurationFileName = "botSettings.ini";
 	if ( argc == 3 )
 	{
